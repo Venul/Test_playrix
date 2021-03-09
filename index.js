@@ -151,7 +151,7 @@ window.setTimeout(function() {
   gsap.to(hammer, {
     alpha: 1, duration: 1
   });
-}, 30);
+}, 3000);
 
 const stair1 = PIXI.Sprite.from('/img/01_stair.png');
 stairParams(stair1, -130);
