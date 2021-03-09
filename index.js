@@ -5,14 +5,23 @@ let addSprite =(img, posx, posy, width, height) => {
 
   elem.x = posx;
   elem.y = posy;
-  if (width || width != 0) elem.width = width;
-  if (height || height != 0) elem.height = height;
+  if (width) elem.width = width;
+  if (height) elem.height = height;
 
   app.stage.addChild(elem);
 }
 
   let onClickFinish = () => {
     addSprite ('/img/final.png', 0, 0, appWidth, appHeight);
+    app.stage.removeChild(hammer);
+    app.stage.removeChild(stair1);
+    app.stage.removeChild(stair2);
+    app.stage.removeChild(stair3);    
+    app.stage.removeChild(stair1_active);
+    app.stage.removeChild(stair2_active);
+    app.stage.removeChild(stair3_active);
+    app.stage.removeChild(btnOk);
+    app.stage.removeChild(btnContinue);
   }
 
   let onClickHammer = () => {
@@ -39,8 +48,13 @@ let onClickStair1 = () => {
   stair2.visible = true;
   stair3.visible = true;
   btnOk.x = appWidth * 0.62;
-  btnOk.y = 130;
   app.stage.addChild(btnOk);
+  app.stage.removeChild(oldStairs);
+  app.stage.removeChild(new_stair_2);
+  app.stage.removeChild(new_stair_3);
+  
+  gsap.to(new_stair_1, {duration: 0.5, y: -50, ease: 'bounce.ease-in'});
+  app.stage.addChild(new_stair_1);
 }
 
 let onClickStair2 = () => {
@@ -52,8 +66,13 @@ let onClickStair2 = () => {
   stair3.visible = true;
 
   btnOk.x = appWidth * 0.69;
-  btnOk.y = 130;
   app.stage.addChild(btnOk);
+  app.stage.removeChild(oldStairs);
+  app.stage.removeChild(new_stair_1);
+  app.stage.removeChild(new_stair_3);
+  
+  gsap.to(new_stair_2, {duration: 0.5, y: -50, ease: 'bounce.ease-in'});
+  app.stage.addChild(new_stair_2);
 }
 
 let onClickStair3 = () => {
@@ -64,8 +83,13 @@ let onClickStair3 = () => {
   stair2.visible = true;
   stair3.visible = false;
   btnOk.x = appWidth * 0.76;
-  btnOk.y = 130;
   app.stage.addChild(btnOk);
+  app.stage.removeChild(oldStairs);
+  app.stage.removeChild(new_stair_1);
+  app.stage.removeChild(new_stair_2);
+  debugger
+  gsap.to(new_stair_3, {duration: 0.5, y: -50, ease: 'bounce.ease-in'});
+  app.stage.addChild(new_stair_3);
 }
 
 const app = new PIXI.Application({
@@ -83,8 +107,15 @@ addSprite ('/img/back.png', 0, 0, appWidth, appHeight);
 addSprite ('/img/dec_2.png', 0, 0, appWidth, appHeight);
 addSprite ('/img/logo.png', 10, 10);
 addSprite ('/img/austin.png', appWidth / 2, appHeight / 6,  appWidth / 12, appHeight / 2);
-addSprite ('/img/stair.png', appWidth * 0.55, appHeight * 0.1, appWidth * 0.7, appHeight);
-addSprite ('/img/dec_1.png', appWidth * 0.8, appHeight * 0.68, appWidth * 0.2, appHeight * 0.4);
+// addSprite ('/img/stair.png', appWidth * 0.55, appHeight * 0.1, appWidth * 0.7, appHeight);
+// addSprite ('/img/new_stair_01.png', 950, -50, appWidth * 0.6, appHeight);
+
+const oldStairs = PIXI.Sprite.from('/img/stair.png');
+oldStairs.x = appWidth * 0.55;
+oldStairs.y = appHeight * 0.1;
+oldStairs.width = appWidth * 0.7;
+oldStairs.height = appHeight;
+app.stage.addChild(oldStairs);
 
 const btnContinue = PIXI.Sprite.from('/img/btn.png');
 btnContinue.x = appWidth * 0.36;
@@ -153,11 +184,32 @@ stair3_active.y = 20;
 app.stage.addChild(stair3_active);
 stair3_active.visible = false;
 
+const new_stair_1 = PIXI.Sprite.from('/img/new_stair_01.png');
+new_stair_1.x = appWidth * 0.45;
+new_stair_1.y = -250;
+new_stair_1.width = appWidth * 0.7; 
+new_stair_1.height = appHeight;
+
+const new_stair_2 = PIXI.Sprite.from('/img/new_stair_02.png');
+new_stair_2.x = appWidth * 0.47;
+new_stair_2.y = -250;
+new_stair_2.width = appWidth * 0.7; 
+new_stair_2.height = appHeight;
+
+const new_stair_3 = PIXI.Sprite.from('/img/new_stair_03.png');
+new_stair_3.x = appWidth * 0.5;
+new_stair_3.y = -250;
+new_stair_3.width = appWidth * 0.7; 
+new_stair_3.height = appHeight;
+
 const btnOk = PIXI.Sprite.from('/img/ok.png');
 btnOk.interactive = true;
 btnOk.buttonMode = true;
+btnOk.y = 130;
 btnOk.on('pointerdown', onClickFinish);
 
 stair1.on('pointerdown', onClickStair1);
 stair2.on('pointerdown', onClickStair2);
 stair3.on('pointerdown', onClickStair3);
+
+addSprite ('/img/dec_1.png', appWidth * 0.8, appHeight * 0.68, appWidth * 0.2, appHeight * 0.4);
