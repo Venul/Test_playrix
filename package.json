@@ -9,7 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "beefy": "^2.1.8",
     "pixi.js": "^6.0.0"
   }
 }
