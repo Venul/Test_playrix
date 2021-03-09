@@ -9,12 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "gsap": "^3.6.0",
-    "pixi-timeout": "^1.0.4",
-    "pixi-timer": "^1.0.1",
-    "pixi.js": "^6.0.0"
-  },
-  "devDependencies": {
-    "babelify": "^10.0.0"
+    "gsap": "^3.6.0"
   }
 }

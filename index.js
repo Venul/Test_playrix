@@ -1,7 +1,7 @@
 const PIXI = require('pixi.js');
 
-let addSprite =(img, posx, posy, width, height) => {
-  const elem = PIXI.Sprite.from(img);
+let addSprite = (sprite, posx, posy, width, height) => {
+  const elem = PIXI.Sprite.from(sprite);
 
   elem.x = posx;
   elem.y = posy;
@@ -11,94 +11,99 @@ let addSprite =(img, posx, posy, width, height) => {
   app.stage.addChild(elem);
 }
 
-  let onClickFinish = () => {
-    addSprite ('/img/final.png', 0, 0, appWidth, appHeight);
-    app.stage.removeChild(hammer);
-    app.stage.removeChild(stair1);
-    app.stage.removeChild(stair2);
-    app.stage.removeChild(stair3);    
-    app.stage.removeChild(stair1_active);
-    app.stage.removeChild(stair2_active);
-    app.stage.removeChild(stair3_active);
-    app.stage.removeChild(btnOk);
-    app.stage.removeChild(btnContinue);
-  }
-
-  let onClickHammer = () => {
+let onClickFinish = () => {
+  addSprite ('/img/final.png', 0, 0, appWidth, appHeight);
+  brush.zIndex = 0;
   app.stage.removeChild(hammer);
+  app.stage.removeChild(stair1);
+  app.stage.removeChild(stair2);
+  app.stage.removeChild(stair3);    
+  app.stage.removeChild(stair1_active);
+  app.stage.removeChild(stair2_active);
+  app.stage.removeChild(stair3_active);
+  app.stage.removeChild(btnOk);
+  app.stage.removeChild(btnContinue);
+}
+
+let onClickHammer = () => {
+  app.stage.removeChild(hammer);
+
   app.stage.addChild(stair1);
-  gsap.to(stair1, {
-    alpha: 1, duration: 1
-  });
   app.stage.addChild(stair2);
-  gsap.to(stair2, {
-    alpha: 1, duration: 1
-  });
   app.stage.addChild(stair3);
-  gsap.to(stair3, {
-    alpha: 1, duration: 1
-  });
+
+  gsap.to(stair1, {alpha: 1, duration: 1});
+  gsap.to(stair2, {alpha: 1, duration: 1});
+  gsap.to(stair3, {alpha: 1, duration: 1});
+}
+
+let clearStair = (new_stair) => {
+  stair1_active.visible = false;
+  stair2_active.visible = false;
+  stair3_active.visible = false;
+  
+  stair1.visible = true;
+  stair2.visible = true;
+  stair3.visible = true;
+
+  app.stage.removeChild(new_stair_1);
+  app.stage.removeChild(new_stair_2);
+  app.stage.removeChild(new_stair_3);
+
+  app.stage.addChild(btnOk);
+  app.stage.removeChild(oldStairs);
+
+  new_stair.y = -350;
+  gsap.to(new_stair, {duration: 0.5, y: -50, ease: 'bounce.ease-in'});
+  app.stage.addChild(new_stair);
+}
+
+let stairParams = (stair, posx) => {
+  stair.x = appWidth * 0.7 + posx;
+  stair.y = 20;
+  stair.interactive = true;
+  stair.buttonMode = true;
+  stair.alpha = 0;
+  stair.zIndex = 20;
 }
 
 let onClickStair1 = () => {
+  btnOk.x = appWidth * 0.69 - 128;
+  clearStair(new_stair_1);
+
   stair1_active.visible = true;
-  stair2_active.visible = false;
-  stair3_active.visible = false;
   stair1.visible = false;
-  stair2.visible = true;
-  stair3.visible = true;
-  btnOk.x = appWidth * 0.69 - 130;
-  app.stage.addChild(btnOk);
-  app.stage.removeChild(oldStairs);
-  app.stage.removeChild(new_stair_2);
-  app.stage.removeChild(new_stair_3);
-  new_stair_1.y = -250;
-  gsap.to(new_stair_1, {duration: 0.5, y: -50, ease: 'bounce.ease-in'});
-  app.stage.addChild(new_stair_1);
 }
 
 let onClickStair2 = () => {
-  stair1_active.visible = false;
-  stair2_active.visible = true;
-  stair3_active.visible = false;
-  stair1.visible = true;
-  stair2.visible = false;
-  stair3.visible = true;
+  btnOk.x = appWidth * 0.69 + 2;
+  clearStair(new_stair_2);
 
-  btnOk.x = appWidth * 0.69;
-  app.stage.addChild(btnOk);
-  app.stage.removeChild(oldStairs);
-  app.stage.removeChild(new_stair_1);
-  app.stage.removeChild(new_stair_3);
-  new_stair_2.y = -250;
-  gsap.to(new_stair_2, {duration: 0.5, y: -50, ease: 'bounce.ease-in'});
-  app.stage.addChild(new_stair_2);
+  stair2_active.visible = true;
+  stair2.visible = false;
 }
 
 let onClickStair3 = () => {
-  stair1_active.visible = false;
-  stair2_active.visible = false;
+  btnOk.x = appWidth * 0.69 + 127;
+  clearStair(new_stair_3);
+
   stair3_active.visible = true;
-  stair1.visible = true;
-  stair2.visible = true;
   stair3.visible = false;
-  btnOk.x = appWidth * 0.69 + 130;
-  app.stage.addChild(btnOk);
-  app.stage.removeChild(oldStairs);
-  app.stage.removeChild(new_stair_1);
-  app.stage.removeChild(new_stair_2);
-  new_stair_3.y = -250;
-  gsap.to(new_stair_3, {duration: 0.5, y: -50, ease: 'bounce.ease-in'});
-  app.stage.addChild(new_stair_3);
+}
+
+let activeStairParams = (stair, posx) => {
+  stair.x = appWidth * 0.7 + posx;
+  stair.y = 20;
+  stair.zIndex = 10;
+  app.stage.addChild(stair);
+  stair.visible = false;
 }
 
 const app = new PIXI.Application({
-    width: window.innerWidth, 
-    height: window.innerHeight, 
-    autoResize: true,
-    sortableChildren: true
+  width: window.innerWidth, 
+  height: window.innerHeight, 
+  autoResize: true
 });
-
 app.stage.sortableChildren = true;
 
 document.body.appendChild(app.view);
@@ -109,10 +114,8 @@ const appHeight = app.screen.height;
 addSprite ('/img/back.png', 0, 0, appWidth, appHeight);
 addSprite ('/img/dec_2.png', 0, 0, appWidth, appHeight);
 addSprite ('/img/logo.png', 10, 10);
-addSprite ('/img/austin.png', appWidth / 2, appHeight / 6,  appWidth / 12, appHeight / 2);
+addSprite ('/img/austin.png', appWidth * 0.5, appHeight * 0.16,  appWidth * 0.08, appHeight * 0.5);
 // relative values ​​of height and width for different screens
-// addSprite ('/img/stair.png', appWidth * 0.55, appHeight * 0.1, appWidth * 0.7, appHeight);
-// addSprite ('/img/new_stair_01.png', 950, -50, appWidth * 0.6, appHeight);
 
 const oldStairs = PIXI.Sprite.from('/img/stair.png');
 oldStairs.x = appWidth * 0.55;
@@ -132,7 +135,6 @@ btnContinue.scale.x = btnContinue.scale.y = 1;
 btnContinue.zIndex = 20;
 // for small screen
 btnContinue.on('pointerdown', onClickFinish);
-
 gsap.to(btnContinue.scale, 2, {duration: 0.5, x:1.1, y: 1.1,  ease: 'bounce.ease-in', repeat:-1, yoyo:true});
 app.stage.addChild(btnContinue);
 
@@ -149,50 +151,28 @@ window.setTimeout(function() {
   gsap.to(hammer, {
     alpha: 1, duration: 1
   });
-}, 3000);
+}, 30);
 
 const stair1 = PIXI.Sprite.from('/img/01_stair.png');
-stair1.x = appWidth * 0.7 - 130;
-stair1.y = 20;
-stair1.interactive = true;
-stair1.buttonMode = true;
-stair1.alpha = 0;
+stairParams(stair1, -130);
+stair1.on('pointerdown', onClickStair1);
 
 const stair2 = PIXI.Sprite.from('/img/02_stair.png');
-stair2.x = appWidth * 0.7;
-stair2.y = 20;
-stair2.interactive = true;
-stair2.buttonMode = true;
-stair2.alpha = 0;
+stairParams(stair2, 0);
+stair2.on('pointerdown', onClickStair2);
 
 const stair3 = PIXI.Sprite.from('/img/03_stair.png');
-stair3.x = appWidth * 0.7 + 130;
-stair3.y = 20;
-stair3.interactive = true;
-stair3.buttonMode = true;
-stair3.alpha = 0;
+stairParams(stair3, 130);
+stair3.on('pointerdown', onClickStair3);
 
 const stair1_active = PIXI.Sprite.from('/img/01_stair_active.png');
-stair1_active.x = appWidth * 0.7 - 130;
-stair1_active.y = 20;
-stair1_active.zIndex = 10;
-// for small screen
-app.stage.addChild(stair1_active);
-stair1_active.visible = false;
+activeStairParams(stair1_active, -130);
 
 const stair2_active = PIXI.Sprite.from('/img/02_stair_active.png');
-stair2_active.x = appWidth * 0.7;
-stair2_active.y = 20;
-stair2_active.zIndex = 10;
-app.stage.addChild(stair2_active);
-stair2_active.visible = false;
+activeStairParams(stair2_active, 0);
 
 const stair3_active = PIXI.Sprite.from('/img/03_stair_active.png');
-stair3_active.x = appWidth * 0.7 + 130;
-stair3_active.y = 20;
-stair3_active.zIndex = 10;
-app.stage.addChild(stair3_active);
-stair3_active.visible = false;
+activeStairParams(stair3_active, 130);
 
 const new_stair_1 = PIXI.Sprite.from('/img/new_stair_01.png');
 new_stair_1.x = appWidth * 0.45;
@@ -213,18 +193,13 @@ const btnOk = PIXI.Sprite.from('/img/ok.png');
 btnOk.interactive = true;
 btnOk.buttonMode = true;
 btnOk.y = 130;
+btnOk.zIndex = 20;
 btnOk.on('pointerdown', onClickFinish);
-
-stair1.on('pointerdown', onClickStair1);
-stair2.on('pointerdown', onClickStair2);
-stair3.on('pointerdown', onClickStair3);
-
-// addSprite ('/img/dec_1.png', appWidth * 0.8, appHeight * 0.68, appWidth * 0.2, appHeight * 0.4);
 
 const brush = PIXI.Sprite.from('/img/dec_1.png');
 brush.x = appWidth * 0.8;
 brush.y = appHeight * 0.68;
 brush.width = appWidth * 0.2;
 brush.height = appHeight * 0.4;
-brush.zIndex = 999;
+brush.zIndex = 99;
 app.stage.addChild(brush);
